@@ -1,0 +1,19 @@
+{
+    "exp_name": "debug_vq_ab_1",
+    "desc": "ablation_exp1",
+    "random_seed": 42,
+    "gpu_idx": 0,
+    "train_raio": 0.75,
+    "labeled_sample_ratio": 0.4,
+    "batch_size": 16,
+    "main_dataset": "mtl-aqa",
+    "sub_dataset": "all",
+    "initial_threshold": 0.99,
+    "threshold_decay": 0.98,
+    "min_threshold": 0.7,
+    "epochs": 2000,
+    "lr": 1e-7,
+    "pretrain_epochs": 1000,
+    "pretrain_lr": 3e-6,
+    "decopuling_dim": 128
+}
