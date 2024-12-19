@@ -91,19 +91,19 @@ FINFFS_FS_START_INDEX = 729
 
 
 def generate_finefs_labels(label_path):
-    label_json_list = os.listdir(r"/data/data-home/ylf/dataset/FineFS/labels")
+    label_json_list = os.listdir(r"/data/data-home/XXXNAME/dataset/FineFS/labels")
     with open(label_path, "w") as f:
         for label_json_file in label_json_list:
             if label_json_file[-5:] == ".json":
                 index = label_json_file[:-5]
-                performance_dict = json.load(open(os.path.join(r"/data/data-home/ylf/dataset/FineFS/labels", label_json_file), "r"))
+                performance_dict = json.load(open(os.path.join(r"/data/data-home/XXXNAME/dataset/FineFS/labels", label_json_file), "r"))
                 score_value = performance_dict["total_element_score"]
                 f.write("{} {}\n".format(index, score_value))
     f.close()
     
 def generate_mtlaqa_labels(label_path):
-    info_dict = pickle.load(open(r"/data/data-home/ylf/dataset/MTL-AQA/info/augmented_final_annotations_dict.pkl", "rb"))
-    data_dir = "/data/data-home/ylf/dataset/MTL-AQA/datas"
+    info_dict = pickle.load(open(r"/data/data-home/XXXNAME/dataset/MTL-AQA/info/augmented_final_annotations_dict.pkl", "rb"))
+    data_dir = "/data/data-home/XXXNAME/dataset/MTL-AQA/datas"
     not_clear_key = list(info_dict.keys())
     with open(label_path, "w") as f:
         for index, (x,y) in enumerate(not_clear_key):
@@ -134,7 +134,7 @@ class AqaDataset(Dataset):
         dataset_used = dataset_used.lower()
         self.dataset_used = dataset_used
         if dataset_used == "finefs":
-            self.label_path = r"/data/data-home/ylf/dataset/FineFS/labels.txt"
+            self.label_path = r"/data/data-home/XXXNAME/dataset/FineFS/labels.txt"
             if not os.path.exists(self.label_path):
                 generate_finefs_labels(self.label_path)
             self.label_dict = {}
@@ -143,11 +143,11 @@ class AqaDataset(Dataset):
                     index, score = line.strip().split()
                     self.label_dict[int(index)] = float(score)
             f.close()
-            self.features_dir = r"/data/data-home/ylf/dataset/FineFS/datas"
+            self.features_dir = r"/data/data-home/XXXNAME/dataset/FineFS/datas"
             
         elif dataset_used == 'gdlt' or dataset_used == "rg":
             self.dataset_used = "rg"
-            self.label_path = r"/data/data-home/ylf/dataset/RG/labels.txt"
+            self.label_path = r"/data/data-home/XXXNAME/dataset/RG/labels.txt"
             self.label_dict = {}
             with open(self.label_path, "r") as f:
                 next(f)
@@ -156,20 +156,20 @@ class AqaDataset(Dataset):
                     index = line_content[0]
                     score = float(line_content[3]) - float(line_content[4])
                     self.label_dict[index] = score
-            self.features_dir = r"/data/data-home/ylf/dataset/RG/swintx_avg_fps25_clip32"
+            self.features_dir = r"/data/data-home/XXXNAME/dataset/RG/swintx_avg_fps25_clip32"
         
         elif dataset_used == r"fis-v":
-            self.label_path = r"/data/data-home/ylf/dataset/fis-v/labels.txt"
+            self.label_path = r"/data/data-home/XXXNAME/dataset/fis-v/labels.txt"
             self.label_dict = {}
             with open(self.label_path, "r") as f:
                 for line in f:
                     index, score1, score2, score3 = line.strip().split()
                     self.label_dict[int(index)] = float(score1)+float(score2)-float(score3)
             f.close()
-            self.features_dir = r"/data/data-home/ylf/dataset/fis-v/swintx_avg_fps25_clip32"
+            self.features_dir = r"/data/data-home/XXXNAME/dataset/fis-v/swintx_avg_fps25_clip32"
 
         elif dataset_used == r"mtl-aqa":
-            self.label_path = r"/data/data-home/ylf/dataset/MTL-AQA/labels.txt"
+            self.label_path = r"/data/data-home/XXXNAME/dataset/MTL-AQA/labels.txt"
             if not os.path.exists(self.label_path):
                 generate_mtlaqa_labels(self.label_path)
                 
@@ -179,11 +179,11 @@ class AqaDataset(Dataset):
                     index, score = line.strip().split()
                     self.label_dict[int(index)] = float(score)
             f.close()
-            self.features_dir = r"/data/data-home/ylf/dataset/MTL-AQA/datas"
+            self.features_dir = r"/data/data-home/XXXNAME/dataset/MTL-AQA/datas"
 
         else:
             print("Default use dataset: {}".format("FineFS"))
-            self.label_path = r"/data/data-home/ylf/dataset/FineFS"
+            self.label_path = r"/data/data-home/XXXNAME/dataset/FineFS"
 
     def init_subset(self, subset=None):
         if subset is not None:

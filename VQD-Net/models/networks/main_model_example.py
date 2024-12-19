@@ -14,7 +14,6 @@ class ModelLoss(nn.Module):
         return torch.sum((pred-tgt)**2) / B
 
 
-# 定义网络结构
 class MainModel(nn.Module):
     def __init__(self, embedding_dim=1024, hidden_dim=256, nhead=4, num_layers=4):
         """

@@ -75,8 +75,10 @@ optimizer_pretrain_unlabel = optim.AdamW(
     list(model.vector_quantized_T.parameters()), 
     lr=config["pretrain_lr"]*0.1)
 optimizer_train = optim.AdamW(
-    [{"params":model.parameters()},
-    {"params": list(model.decoupling_P.parameters()) + list(model.decoupling_T.parameters()) + list(model.vector_quantized_P.parameters()) + list(model.vector_quantized_T.parameters()), "lr":config["lr"]}],
+    [
+        {"params":list(model.weight_regressor.parameters())+list(model.clip_score_regressor.parameters())+list(model.transformer_encoder.parameters())+list(model.score_regressor.parameters())+list(model.confidence_regressor.parameters())},
+        {"params": list(model.decoupling_P.parameters()) + list(model.decoupling_T.parameters()) + list(model.vector_quantized_P.parameters()) + list(model.vector_quantized_T.parameters()), "lr":config["lr"]},
+    ],
     lr = config["pretrain_lr"]
 )
 
