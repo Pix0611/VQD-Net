@@ -13,7 +13,7 @@ class UsdlHead(nn.Module):
         super().__init__()
         self.linear_projection = nn.Sequential(
             nn.Linear(in_dim, 256),
-            # nn.Dropout(0.5),
+
             nn.ReLU(),
             nn.Linear(256, heads_num),
             nn.Softmax(dim=-1),

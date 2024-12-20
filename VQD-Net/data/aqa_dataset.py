@@ -34,8 +34,8 @@ SAMPLE_NUM = {
 }
 FEATURE_SEQ_LENGTH_FILL_ZERO_TO = {
     "finefs":{
-        "short program": 192, # 16x
-        "free skating": 256 # 16x
+        "short program": 192,
+        "free skating": 256
     },
     "rg":{
         "ribbon": 80,
@@ -245,14 +245,14 @@ class AqaDataset(Dataset):
         elif self.dataset_used == "mtl-aqa":
             feature_path = os.path.join(self.features_dir, "{}.pkl".format(idx))
             feature = pickle.load(open(feature_path, "rb"))
-            # mtl-aqa的特征长度是768，需要补齐长度
+
             L, N = feature.shape
             zero_to_append = torch.zeros(L, 1024-N)
             feature = torch.cat((feature, zero_to_append), dim=1)
-            # feature = torch.load(feature_path)
+
             label = self.label_dict[idx]
         
-        # 特征的seq——length补齐至指定长度
+
         feature =  F.pad(feature, (0, 0, 0, FEATURE_SEQ_LENGTH_FILL_ZERO_TO[self.dataset_used][self.subset]-feature.shape[0]), mode="constant", value=0.0)
         
         min_score = MIN_SCORE[self.dataset_used][self.subset]
@@ -261,13 +261,13 @@ class AqaDataset(Dataset):
         
         return feature, label
 
-# 使用示例
+
 if __name__ == "__main__":
-    # pass
+
 
     dataset_example = AqaDataset(
         dataset_used="MTL-AQA",
-        # subset="ball"
+
     )
     print("Total nums of {}:{} is {}".format(dataset_example.dataset_used, dataset_example.subset, len(dataset_example)))
     max_seq_length = 0

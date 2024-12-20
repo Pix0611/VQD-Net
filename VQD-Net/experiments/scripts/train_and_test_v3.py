@@ -39,7 +39,7 @@ args = parser.parse_args()
 print("Loading Config From {} And Writing into Log File...".format(args.config_path))
 config = json.load(open(args.config_path, "r"))  
 
-# exp_name = args.config_path.split("/")[-1][:-5]
+
 exp_name = config["exp_name"]
 log_path = os.path.join(r"experiments/log", "{}.log".format(exp_name))
 tensorboard_path = "experiments/log/tensorboard_{}".format(exp_name)
@@ -58,7 +58,7 @@ os.system("echo  >> {}".format(log_path))
 from experiments.tools.random_seed import setup_seed
 setup_seed(config["random_seed"])
 
-# device
+
 cuda_idx = config["gpu_idx"]
 device = torch.device(f"cuda:{cuda_idx}" if torch.cuda.is_available() else "cpu")
 
@@ -118,17 +118,17 @@ def pretrain_one_step():
         feature = feature.to(device)
         
         optimizer_pretrain_unlabel.zero_grad()
-        # optimizer_pretrain_all.zero_grad()
+
         pred, confidence, loss = model(feature)
         loss.backward()
         optimizer_pretrain_unlabel.step()
-        # optimizer_pretrain_all.step()
+
         loss_val.append(loss.item())
 
     if (epoch+1) % 10 == 0:
         loss = sum(loss_val)/len(loss_val)
         logging.info(f"Loss Value:{loss:.4f}")
-        # tensorboard_writer.add_scalar("Pretrain_Loss", loss, epoch+1)
+
 
 def supervised_train_one_step():
     model.train()
@@ -138,7 +138,7 @@ def supervised_train_one_step():
         
         optimizer_train.zero_grad()
         pred, confidence, loss = model(feature, tgt)
-        # loss = criterion(pred, tgt)
+
         loss.backward()
         optimizer_train.step()
         
@@ -150,7 +150,7 @@ def semi_supervised_train_one_step(current_threshold):
         
         optimizer_train.zero_grad()
         pred, confidence, loss = model(feature, tgt)
-        # loss = criterion(pred, tgt)
+
         loss.backward()
         optimizer_train.step()
     
@@ -207,9 +207,9 @@ for epoch in range(epochs):
     logging.info(f"Epoch {epoch+1}/{epochs}, Threshold: {current_threshold:.2f}")    
     supervised_train_one_step()
     
-    # semi_supervised_train_one_step(current_threshold)
+
     
-    # eval: 10epochs/1eval
+
     if (epoch+1) % 10 == 0:
         spearman_corr_train_labeled, loss_train_labeled  = evaluate(train_labeled_loader)
         logging.info(f"Trainset Labeled Spearman Correlation: {spearman_corr_train_labeled:.4f}")
@@ -227,5 +227,5 @@ for epoch in range(epochs):
         tensorboard_writer.add_scalar("Unlabeled_Train_Set_Loss", loss_train_unlabeled, epoch+1)
         tensorboard_writer.add_scalar("Test_Set_Loss", loss_test, epoch+1)
     
-    # current_threshold = min_threshold + (initial_threshold - min_threshold)* epoch / epochs
+
     current_threshold = initial_threshold - (initial_threshold-min_threshold)*epoch/epochs

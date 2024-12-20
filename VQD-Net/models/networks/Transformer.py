@@ -78,7 +78,7 @@ class Transformer(Module):
 
         self.batch_first = batch_first
 
-        # self.pos_embed = PositionEmbeddingSine(d_model, dropout)
+
 
     def forward(self, src: Tensor, tgt: Tensor, src_mask: Optional[Tensor] = None, tgt_mask: Optional[Tensor] = None,
                 memory_mask: Optional[Tensor] = None, src_key_padding_mask: Optional[Tensor] = None,
@@ -137,9 +137,9 @@ class Transformer(Module):
             raise RuntimeError("the feature number of src and tgt must be equal to d_model")
 
         memory = self.encoder(src, mask=src_mask, src_key_padding_mask=src_key_padding_mask)
-        # memory = self.pos_embed(memory)
-        # import numpy as np
-        # np.save('./after.npy', memory.squeeze(0).cpu().detach().numpy())
+
+
+
 
         output = self.decoder(tgt, memory, tgt_mask=tgt_mask, memory_mask=memory_mask,
                               tgt_key_padding_mask=tgt_key_padding_mask,
@@ -155,7 +155,7 @@ class Transformer(Module):
         return mask
 
     def _reset_parameters(self):
-        r"""Initiate parameters in the transformer model."""
+        r
 
         for p in self.parameters():
             if p.dim() > 1:
@@ -297,7 +297,7 @@ class TransformerEncoderLayer(Module):
         super(TransformerEncoderLayer, self).__init__()
         self.self_attn = MultiheadAttention(d_model, nhead, dropout=dropout, batch_first=batch_first,
                                             **factory_kwargs)
-        # Implementation of Feedforward model
+
         self.linear1 = Linear(d_model, dim_feedforward, **factory_kwargs)
         self.dropout = Dropout(dropout)
         self.linear2 = Linear(dim_feedforward, d_model, **factory_kwargs)
@@ -328,8 +328,8 @@ class TransformerEncoderLayer(Module):
         """
         src2, att_weights = self.self_attn(src, src, src, attn_mask=src_mask,
                                            key_padding_mask=src_key_padding_mask)
-        # print(att_weights)
-        # raise SystemExit
+
+
         src = src + self.dropout1(src2)
         src = self.norm1(src)
         src2 = self.linear2(self.dropout(self.activation(self.linear1(src))))
@@ -378,7 +378,7 @@ class TransformerDecoderLayer(Module):
                                             **factory_kwargs)
         self.multihead_attn = MultiheadAttention(d_model, nhead, dropout=dropout, batch_first=batch_first,
                                                  **factory_kwargs)
-        # Implementation of Feedforward model
+
         self.linear1 = Linear(d_model, dim_feedforward, **factory_kwargs)
         self.dropout = Dropout(dropout)
         self.linear2 = Linear(dim_feedforward, d_model, **factory_kwargs)
@@ -420,9 +420,9 @@ class TransformerDecoderLayer(Module):
         tgt = self.norm1(tgt)
         tgt2, att_weights = self.multihead_attn(tgt, memory, memory, attn_mask=memory_mask,
                                                 key_padding_mask=memory_key_padding_mask)
-        # print(att_weights)
-        # import pdb
-        # pdb.set_trace()
+
+
+
         tgt = tgt + self.dropout2(tgt2)
         tgt = self.norm2(tgt)
         tgt2 = self.linear2(self.dropout(self.activation(self.linear1(tgt))))
